@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
 
 namespace Algorithms__Design_and_Analysis__Part_One.Properties.Algorithms
 {
@@ -10,70 +6,47 @@ namespace Algorithms__Design_and_Analysis__Part_One.Properties.Algorithms
     {
         public void SortNumbers(int [] arrayToSort)
         {
-            int[] f = { 1, 2, 7,4,56 };
-            var last = MergeSort(arrayToSort, 0, arrayToSort.Length - 1);
-            foreach (var i in last)
-            {
-                Console.WriteLine(i);
-            }
+            
+            MergeSort(arrayToSort);
+            Console.WriteLine("Sorted Array: " + string.Join(", ", arrayToSort));
 
-        }
-
-        private static int[] MergeSort(int[] array, int start, int end)
-        {
-            // to terminate the recursive loop, we need the termination check,
-            // in here; when one element in list, the starting ele and end ele is same.
-
-            if (start >= end)
-            {
-                return new int[] { array[end]};
-            }
-            var middlePoint = (start + end) / 2; // Getting the mid point of the array
-            var leftArray = MergeSort(array, start, middlePoint);
-            var rightArray = MergeSort(array, middlePoint + 1, end);
-            var toReturn = Sort(rightArray, leftArray);
-            return toReturn;
         }
         
-        // Sort method 
-        private static int[] Sort(IReadOnlyList<int> fArray, IReadOnlyList<int> sArray) // this is taking 2 SORTED Arrays and returns the merged array
+        void MergeSort(int[] arr)
         {
-            int fIndex = 0;
-            int sIndex = 0;
-            int oIndex = 0;
-            var outArray = new int[fArray.Count + sArray.Count];
+            if (arr.Length <= 1)
+                return;
+    
+            int middle = arr.Length / 2;
+            int[] left = new int[middle];
+            int[] right = new int[arr.Length - middle];
 
+            for (int i = 0; i < middle; i++)
+                left[i] = arr[i];
 
-            while (fIndex < fArray.Count && sIndex < sArray.Count)
+            for (int i = middle; i < arr.Length; i++)
+                right[i - middle] = arr[i];
+
+            MergeSort(left);
+            MergeSort(right);
+
+            int leftIndex = 0;
+            int rightIndex = 0;
+            int arrIndex = 0;
+
+            while (leftIndex < left.Length && rightIndex < right.Length)
             {
-                if (fArray[fIndex] < sArray[sIndex])
-                {
-                    outArray[oIndex] = fArray[fIndex];
-                    fIndex++;
-                }
+                if (left[leftIndex] <= right[rightIndex])
+                    arr[arrIndex++] = left[leftIndex++];
                 else
-                {
-                    outArray[oIndex] = sArray[sIndex];
-                    sIndex++;
-                }
-                oIndex++;
+                    arr[arrIndex++] = right[rightIndex++];
             }
 
-            while (fIndex < fArray.Count)
-            {
-                outArray[oIndex] = fArray[fIndex];
-                fIndex++;
-                oIndex++;
-            }
-            
-            while (sIndex < sArray.Count)
-            {
-                outArray[oIndex] = sArray[sIndex];
-                sIndex++;
-                oIndex++;
-            }
+            while (leftIndex < left.Length)
+                arr[arrIndex++] = left[leftIndex++];
 
-            return outArray;
+            while (rightIndex < right.Length)
+                arr[arrIndex++] = right[rightIndex++];
 
         }
     }
